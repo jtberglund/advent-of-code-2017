@@ -16,7 +16,7 @@ function readFile(file) {
 function readFileLineByLine(file) {
     return new Promise((resolve, reject) => {
         const lines = [];
-        const rl = readline
+        readline
             .createInterface({
                 input: fs.createReadStream(file)
             })
