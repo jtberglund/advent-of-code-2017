@@ -1,4 +1,4 @@
-import { spiralMemoryPart1 } from './SpiralMemory';
+import { spiralMemoryPart1, spiralMemoryPart2 } from './SpiralMemory';
 
 describe('Spiral Memory Part 1', () => {
     test('Data from square 1 must be carried 0 steps', () => {
@@ -19,5 +19,11 @@ describe('Spiral Memory Part 1', () => {
 
     test('Puzzle input', () => {
         expect(spiralMemoryPart1(361527)).toBe(326);
+    });
+});
+
+describe('Spiral Memory Part 2', () => {
+    test('Puzzle input', () => {
+        expect(spiralMemoryPart2(361527)).toBe(363010);
     });
 });
