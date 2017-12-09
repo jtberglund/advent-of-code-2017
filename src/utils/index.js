@@ -25,4 +25,9 @@ function readFileLineByLine(file) {
     });
 }
 
-export { readFile, readFileLineByLine };
+function trace(args) {
+    console.log(args);
+    return args;
+}
+
+export { readFile, readFileLineByLine, trace };
