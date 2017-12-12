@@ -5,8 +5,7 @@ import {
     highEntropyPassphrasesPart2
 } from './HighEntropyPassphrases';
 
-import { readFileLineByLine } from '../utils/index';
-import { readFileSync } from 'fs';
+import { readFileLineByLine } from '../utils';
 
 const puzzleInput = readFileLineByLine(`${__dirname}/input.txt`);
 
