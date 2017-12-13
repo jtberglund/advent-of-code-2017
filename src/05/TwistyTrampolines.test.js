@@ -46,7 +46,7 @@ describe('A Maze of Twisty Trampolines, All Alike Part 1', () => {
     });
 });
 
-describe.only('A Maze of Twisty Trampolines, All Alike Part 2', () => {
+describe('A Maze of Twisty Trampolines, All Alike Part 2', () => {
     test('Jumping with offsets "(0) 3  0  1 -3" takes 10 steps', () => {
         expect(escapeMazePart2([0, 3, 0, 1, -3])).toBe(10);
     });

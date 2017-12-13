@@ -14,6 +14,7 @@
     "jest": "^21.2.1"
   },
   "dependencies": {
+    "folktale": "^2.0.1",
     "ramda": "^0.25.0"
   },
   "babel": {
