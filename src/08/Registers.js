@@ -20,11 +20,12 @@ class Processor {
     constructor(instructionList) {
         this.registers = {};
         this.currInstruction = 0;
-        this.instructions = R.map(parseInstruction.bind(this), instructionList);
+        this.largestEverValue = -Infinity;
+        this.instructions = instructionList.map(parseInstruction.bind(this));
     }
 
     start() {
-        R.forEach(this.processInstruction.bind(this), this.instructions);
+        this.instructions.forEach(this.processInstruction.bind(this));
     }
 
     processInstruction() {
@@ -35,6 +36,7 @@ class Processor {
         const conditionStr = `${this.getRegisterValue(conditionRegister)} ${comparison.join(SPACE)}`;
         if (eval(conditionStr)) {
             this.setRegisterValue(register, action(currVal, amount));
+            this.largestEverValue = Math.max(this.getLargestValue(), this.largestEverValue);
         }
 
         this.currInstruction++;
@@ -50,6 +52,10 @@ class Processor {
 
     getLargestValue() {
         return R.reduce(R.max, -Infinity, R.values(this.registers));
+    }
+
+    getLargestEverValue() {
+        return this.largestEverValue;
     }
 }
 
@@ -88,4 +94,10 @@ const registersPart1 = instructionList => {
     return processor.getLargestValue();
 };
 
-export { parseInstruction, registersPart1 };
+const registersPart2 = instructionList => {
+    const processor = new Processor(instructionList);
+    processor.start();
+    return processor.getLargestEverValue();
+};
+
+export { parseInstruction, registersPart1, registersPart2 };
