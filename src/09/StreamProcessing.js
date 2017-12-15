@@ -112,6 +112,7 @@ const streamProcessingPart1 = stream => {
 };
 
 /**
+ * --- Part 2 ---
  * Now, you're ready to remove the garbage.
  *
  * To prove you've removed it, you need to count all of the characters within the garbage.
