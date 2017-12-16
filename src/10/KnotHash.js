@@ -1,20 +1,43 @@
 import R from 'ramda';
+import invariant from 'invariant';
 
-const reverseList = (currPosition, length, list) => {
-    const endPos = currPosition + length;
-    const leftOver = Math.max(0, endPos - list.length);
-    return [
-        ...R.slice(0, leftOver || currPosition, list),
-        ...R.reverse(R.slice(currPosition, endPos, list)),
-        ...R.slice(Math.max(list.length, endPos), list.length, list)
-    ];
+const sliceWrapping = (startIndex, endIndex, arr) => {
+    invariant(startIndex <= endIndex, 'startIndex cannot be greater than endIndex');
+
+    if (endIndex <= arr.length) {
+        return arr.slice(startIndex, endIndex);
+    }
+
+    const excess = endIndex - arr.length;
+    return [...arr.slice(startIndex, arr.length), ...arr.slice(0, excess)];
+};
+
+const concatAll = (...lists) => R.reduce((acc, list) => acc.concat(list), [], lists);
+
+const reverseSublist = (currPosition, length, list) => {
+    const endIndex = currPosition + length;
+
+    if (endIndex <= list.length) {
+        const sublist = list.slice(currPosition, endIndex);
+        return concatAll(list.slice(0, currPosition), R.reverse(sublist), list.slice(endIndex, list.length));
+    }
+
+    const reversedSublist = R.reverse(sliceWrapping(currPosition, endIndex, list));
+
+    // Put the array back together in the correct order
+    const leftOver = endIndex - list.length; // number of wrapped elements
+    const reversedHead = reversedSublist.slice(reversedSublist.length - leftOver, reversedSublist.length);
+    const reversedTail = reversedSublist.slice(0, endIndex - reversedSublist.length);
+    const middle = list.slice(leftOver, currPosition);
+
+    return concatAll(reversedHead, middle, reversedTail);
 };
 
 const incrementWrapping = R.curry((arrLength, index, incVal) => (index + incVal) % arrLength);
 
 const hash = (skipSize, lengthIndex, lengths, currPosition, list) => {
     const length = lengths[lengthIndex];
-    const reversedList = reverseList(currPosition, length, list);
+    const reversedList = reverseSublist(currPosition, length, list);
     return {
         currPosition: incrementWrapping(list.length, currPosition, length + skipSize),
         skipSize: skipSize + 1,
@@ -28,4 +51,4 @@ const knotHashPart1 = () => {
     //
 };
 
-export { hash, knotHashPart1 };
+export { sliceWrapping, reverseSublist, hash, knotHashPart1 };

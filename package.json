@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "folktale": "^2.0.1",
+    "invariant": "^2.2.2",
     "ramda": "^0.25.0"
   },
   "babel": {
