@@ -1,3 +1,4 @@
+import R from 'ramda';
 import fs from 'fs';
 import readline from 'readline';
 
@@ -30,4 +31,6 @@ function trace(args) {
     return args;
 }
 
-export { readFile, readFileLineByLine, trace };
+const reduce = R.addIndex(R.reduce);
+
+export { readFile, readFileLineByLine, trace, reduce };

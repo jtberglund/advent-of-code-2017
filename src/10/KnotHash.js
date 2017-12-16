@@ -27,7 +27,7 @@ const reverseSublist = (currPosition, length, list) => {
     // Put the array back together in the correct order
     const leftOver = endIndex - list.length; // number of wrapped elements
     const reversedHead = reversedSublist.slice(reversedSublist.length - leftOver, reversedSublist.length);
-    const reversedTail = reversedSublist.slice(0, endIndex - reversedSublist.length);
+    const reversedTail = reversedSublist.slice(0, reversedSublist.length - leftOver);
     const middle = list.slice(leftOver, currPosition);
 
     return concatAll(reversedHead, middle, reversedTail);
@@ -37,7 +37,7 @@ const incrementWrapping = R.curry((arrLength, index, incVal) => (index + incVal)
 
 const hash = (skipSize, lengthIndex, lengths, currPosition, list) => {
     const length = lengths[lengthIndex];
-    const reversedList = reverseSublist(currPosition, length, list);
+    const reversedList = length > list.length ? list : reverseSublist(currPosition, length, list);
     return {
         currPosition: incrementWrapping(list.length, currPosition, length + skipSize),
         skipSize: skipSize + 1,
@@ -47,8 +47,10 @@ const hash = (skipSize, lengthIndex, lengths, currPosition, list) => {
     };
 };
 
-const knotHashPart1 = () => {
-    //
+const knotHashPart1 = (listSize, lengths) => {
+    const startValue = { list: R.range(0, listSize), currPosition: 0 };
+    const finalList = lengths.reduce((result, length, i, list) => hash(i, i, lengths, result.currPosition, result.list), startValue).list;
+    return finalList[0] * finalList[1];
 };
 
 export { sliceWrapping, reverseSublist, hash, knotHashPart1 };
