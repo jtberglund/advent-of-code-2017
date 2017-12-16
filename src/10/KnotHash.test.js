@@ -1,4 +1,6 @@
-import { hash, knotHashPart1, reverseSublist, sliceWrapping } from './KnotHash';
+import { computeDenseHash, hash, knotHashPart1, knotHashPart2, parseLengthArray, reverseSublist, sliceWrapping, xor } from './KnotHash';
+
+import R from 'ramda';
 
 const PUZZLE_INPUT = [130, 126, 1, 11, 140, 2, 255, 207, 18, 254, 246, 164, 29, 104, 0, 224];
 
@@ -73,5 +75,27 @@ describe('Knot Hash Part 1', () => {
 
     test('Puzzle input', () => {
         expect(knotHashPart1(256, PUZZLE_INPUT)).toBe(38628);
+    });
+});
+
+describe('parseLengthArray', () => {
+    test('Lengths of [1, 2, 3]', () => {
+        expect(parseLengthArray([1, 2, 3])).toEqual([49, 44, 50, 44, 51, 17, 31, 73, 47, 23]);
+    });
+});
+
+describe('xor', () => {
+    test('XOR array', () => {
+        const list = [65, 27, 9, 1, 4, 3, 40, 50, 91, 7, 6, 0, 2, 5, 68, 22];
+        expect(xor(16)(list)).toBe(64);
+    });
+});
+
+describe.only('Knot Hash Part 2', () => {
+    test('Puzzle input1', () => {
+        expect(knotHashPart2([1, 2, 3])).toBe(10);
+    });
+    test('Puzzle input', () => {
+        expect(knotHashPart2(PUZZLE_INPUT)).toBe(10);
     });
 });
