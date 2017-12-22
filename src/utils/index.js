@@ -2,7 +2,7 @@ import R from 'ramda';
 import fs from 'fs';
 import readline from 'readline';
 
-function readFile(file) {
+const readFile = file => {
     return new Promise((resolve, reject) => {
         fs.readFile(file, 'utf8', (err, data) => {
             if (err) {
@@ -12,9 +12,9 @@ function readFile(file) {
             }
         });
     });
-}
+};
 
-function readFileLineByLine(file) {
+const readFileLineByLine = file => {
     return new Promise((resolve, reject) => {
         const lines = [];
         readline
@@ -24,13 +24,18 @@ function readFileLineByLine(file) {
             .on('line', line => lines.push(line))
             .on('close', () => resolve(lines));
     });
-}
+};
 
-function trace(args) {
+const trace = args => {
     console.log(args);
     return args;
-}
+};
 
 const reduce = R.addIndex(R.reduce);
 
-export { readFile, readFileLineByLine, trace, reduce };
+const pad = R.curry((char, len, str) => {
+    const padAmount = Math.max(len - str.length, 0);
+    return char.repeat(padAmount) + str;
+});
+
+export { readFile, readFileLineByLine, trace, reduce, pad };

@@ -1,6 +1,7 @@
+import { pad, trace } from '../utils';
+
 import R from 'ramda';
 import invariant from 'invariant';
-import { trace } from '../utils';
 
 const sliceWrapping = (startIndex, endIndex, arr) => {
     invariant(startIndex <= endIndex, 'startIndex cannot be greater than endIndex');
@@ -39,13 +40,15 @@ const incrementWrapping = R.curry((arrLength, index, incVal) => (index + incVal)
 const hash = (skipSize, lengthIndex, lengths, currPosition, list) => {
     const length = lengths[lengthIndex];
     const reversedList = length > list.length ? list : reverseSublist(currPosition, length, list);
-    return {
+    const a = {
         currPosition: incrementWrapping(list.length, currPosition, length + skipSize),
         skipSize: skipSize + 1,
         lengthIndex: lengthIndex + 1,
         lengths,
         list: reversedList
     };
+    console.log(a.currPosition, a.skipSize);
+    return a;
 };
 
 const knotHash = (skipSize, currPosition, listSize, lengths) => {
@@ -75,35 +78,25 @@ const concatRight = R.curry((arr1, arr2) => arr2.concat(arr1));
  */
 const parseLengthArray = R.compose(concatRight(EXTRA_LENGTHS), mapChars(toAscii), arrToString);
 
-const SPARSE_HASH_ROUNDS = 64;
-const computeSparseHash = (listSize, lengths) => {
-    const asciiCodeLengths = parseLengthArray(lengths);
+const computeSparseHash = (listSize, lengths, numRounds) => {
     const startVal = { skipSize: 0, currPosition: 0 };
-    return R.range(0, SPARSE_HASH_ROUNDS).reduce(result => {
-        return knotHash(result.skipSize, result.currPosition, listSize, asciiCodeLengths);
-    }, startVal).list;
+    return R.range(0, numRounds).reduce(result => {
+        // console.log(result.skipSize, result.currPosition);
+        return knotHash(result.skipSize, result.currPosition, listSize, lengths);
+    }, startVal);
 };
 
 const xor = R.reduce((acc, num) => acc ^ num, 0);
 
-const pad = R.curry((char, len, str) => {
-    const padAmount = Math.max(len - str.length, 0);
-    const res = char.repeat(padAmount) + str;
-    if (padAmount) {
-        console.log(`${str} => ${res}`);
-    }
-    return res;
-});
 const toHex = R.compose(pad('0', 2), num => num.toString(16));
 const hexHash = R.compose(R.join(''), R.map(toHex));
 
-const computeDenseHash = list => {
-    invariant(list.length === 256, `List length is ${list.length}. List length must be 256`);
-    return R.compose(R.map(xor), R.splitEvery(16))(list);
-};
+const computeDenseHash = R.compose(R.map(xor), R.splitEvery(16));
 
 const knotHashPart2 = lengths => {
-    const sparseHash = computeSparseHash(256, lengths);
+    const asciiCodeLengths = parseLengthArray(lengths);
+    console.log('ascci', asciiCodeLengths);
+    const sparseHash = computeSparseHash(256, asciiCodeLengths, 64);
     const res = computeDenseHash(sparseHash);
     console.log(res);
     const hex = hexHash(res);
@@ -111,4 +104,15 @@ const knotHashPart2 = lengths => {
     return hex;
 };
 
-export { knotHashPart2, sliceWrapping, reverseSublist, hash, knotHashPart1, parseLengthArray, computeDenseHash, xor };
+export {
+    knotHashPart2,
+    sliceWrapping,
+    reverseSublist,
+    hash,
+    knotHashPart1,
+    parseLengthArray,
+    computeSparseHash,
+    computeDenseHash,
+    xor,
+    hexHash
+};
