@@ -1,4 +1,4 @@
-import { hexEdPart1, travel } from './HexEd';
+import { hexEdPart1, hexEdPart2, travel } from './HexEd';
 
 import { readFile } from '../utils';
 
@@ -23,5 +23,11 @@ describe('Hex Ed Part 1', () => {
 
     test('Puzzle input', () => {
         return PUZZLE_INPUT.then(input => expect(hexEdPart1(input)).toEqual(670));
+    });
+});
+
+describe('Hex Ed Part 2', () => {
+    test('Puzzle input', () => {
+        return PUZZLE_INPUT.then(input => expect(hexEdPart2(input)).toEqual(1426));
     });
 });

@@ -9,22 +9,22 @@ const STEPS = {
     sw: ({ x, y, z }) => ({ x: x - 1, y, z: z + 1 })
 };
 
-function step(direction, hex) {
-    return STEPS[direction](hex);
-}
+const START = { x: 0, y: 0, z: 0 };
+
+const step = (direction, hex) => STEPS[direction](hex);
 
 /**
  * Travel through the specified path on the hex grid.
  * @returns The hex at the end of the path
  */
-const travel = R.reduce((hex, direction) => step(direction, hex), { x: 0, y: 0, z: 0 });
+const travel = R.reduce((hex, direction) => step(direction, hex), START);
 
 const distanceBetween = (hex1, hex2) => {
     return Math.max(Math.abs(hex1.x - hex2.x), Math.abs(hex1.y - hex2.y), Math.abs(hex1.z - hex2.z));
 };
 
 /**
- * --- Day 11: Hex Ed ---
+ * --- Part 1 ---
  * Crossing the bridge, you've barely reached the other side of the stream when a program comes up to you, clearly in distress.
  * "It's my child process," she says, "he's gotten lost in an infinite grid!"
  *
@@ -55,6 +55,25 @@ const distanceBetween = (hex1, hex2) => {
  * ne,ne,s,s is 2 steps away (se,se).
  * se,sw,se,sw,sw is 3 steps away (s,s,sw).
  */
-const hexEdPart1 = steps => distanceBetween({ x: 0, y: 0, z: 0 }, travel(steps));
+const hexEdPart1 = steps => distanceBetween(START, travel(steps));
 
-export { travel, distanceBetween, hexEdPart1 };
+/**
+ * --- Part 2 ---
+ * How many steps away is the furthest he ever got from his starting position?
+ */
+const hexEdPart2 = steps => {
+    return R.reduce(
+        (acc, direction) => {
+            const destination = step(direction, acc.hex);
+            const distance = distanceBetween(START, destination);
+            return {
+                hex: destination,
+                maxSteps: Math.max(acc.maxSteps, distance)
+            };
+        },
+        { hex: START, maxSteps: 0 },
+        steps
+    ).maxSteps;
+};
+
+export { travel, distanceBetween, hexEdPart1, hexEdPart2 };
