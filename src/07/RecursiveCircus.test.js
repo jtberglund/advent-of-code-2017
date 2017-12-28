@@ -2,7 +2,23 @@ import { parseProgram, recursiveCircusPart1 } from './RecursiveCircus';
 
 import { readFileLineByLine } from '../utils';
 
-const puzzleInput = readFileLineByLine(`${__dirname}/input.txt`);
+const EXAMPLE = [
+    'pbga (66)',
+    'xhth (57)',
+    'ebii (61)',
+    'havc (66)',
+    'ktlj (57)',
+    'fwft (72) -> ktlj, cntj, xhth',
+    'qoyq (66)',
+    'padx (45) -> pbga, havc, qoyq',
+    'tknk (41) -> ugml, padx, fwft',
+    'jptl (61)',
+    'ugml (68) -> gyxo, ebii, jptl',
+    'gyxo (61)',
+    'cntj (57)'
+];
+
+const PUZZLE_INPUT = readFileLineByLine(`${__dirname}/input.txt`);
 
 describe('Recursive Circus Part 1', () => {
     test('Parse program "tknk (41) -> ugml, padx, fwft"', () => {
@@ -24,8 +40,12 @@ describe('Recursive Circus Part 1', () => {
         expect(parseProgram('obqyrh (55)')).toEqual(program);
     });
 
+    test('Example', () => {
+        expect(recursiveCircusPart1(EXAMPLE)).toBe('tknk');
+    });
+
     test('Puzzle input', () => {
-        return puzzleInput.then(list => expect(recursiveCircusPart1(list)).toEqual(''));
+        return PUZZLE_INPUT.then(list => expect(recursiveCircusPart1(list)).toEqual('hlqnsbe'));
     });
 });
 

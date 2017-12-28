@@ -1,26 +1,26 @@
 {
-  "name": "advent-of-code-2017",
-  "version": "1.0.0",
-  "description": "My solutions for Advent of Code 2017",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "author": "Jeremy Berglund",
-  "license": "MIT",
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "jest": "^21.2.1"
-  },
-  "dependencies": {
-    "folktale": "^2.0.1",
-    "invariant": "^2.2.2",
-    "ramda": "^0.25.0"
-  },
-  "babel": {
-    "presets": [
-      "env"
-    ]
-  }
+    "name": "advent-of-code-2017",
+    "version": "1.0.0",
+    "description": "My solutions for Advent of Code 2017",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "author": "Jeremy Berglund",
+    "license": "MIT",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "jest": "^21.2.1"
+    },
+    "dependencies": {
+        "folktale": "^2.0.1",
+        "invariant": "^2.2.2",
+        "ramda": "^0.25.0"
+    },
+    "babel": {
+        "presets": ["env"],
+        "plugins": ["transform-object-rest-spread"]
+    }
 }
