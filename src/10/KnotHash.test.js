@@ -1,15 +1,5 @@
-import {
-    computeDenseHash,
-    computeSparseHash,
-    hash,
-    hexHash,
-    knotHashPart1,
-    knotHashPart2,
-    parseLengthArray,
-    reverseSublist,
-    sliceWrapping,
-    xor
-} from './KnotHash';
+import { computeDenseHash, computeSparseHash, hash, hexHash, knotHashPart1, knotHashPart2, lengthsToAscii } from './KnotHash';
+import { reverseSublist, sliceWrapping, xor } from './KnotHashUtils';
 
 import R from 'ramda';
 
@@ -91,7 +81,7 @@ describe('Knot Hash Part 1', () => {
 
 describe('parseLengthArray', () => {
     test('Lengths of [1, 2, 3]', () => {
-        expect(parseLengthArray([1, 2, 3])).toEqual([49, 44, 50, 44, 51, 17, 31, 73, 47, 23]);
+        expect(lengthsToAscii([1, 2, 3])).toEqual([49, 44, 50, 44, 51, 17, 31, 73, 47, 23]);
     });
 });
 
@@ -108,31 +98,35 @@ describe('Hexidecimal strings', () => {
     });
 });
 
-describe.only('Knot Hash Part 2', () => {
-    // test('1 round of the sparse hash is the same as Knot Hash part 1', () => {
-    //     const resultList = computeSparseHash(256, PUZZLE_INPUT, 1);
-    //     expect(resultList[0] * resultList[1]).toEqual(38628);
-    // });
+describe('Knot Hash Part 2', () => {
+    test('1 round of the sparse hash is the same as Knot Hash part 1', () => {
+        const resultList = computeSparseHash(256, PUZZLE_INPUT, 1).list;
+        expect(resultList[0] * resultList[1]).toEqual(38628);
+    });
 
     test('Example', () => {
-        const result = computeSparseHash(5, [3, 4, 1, 5, 17, 31, 73, 47, 23], 1);
+        const result = computeSparseHash(5, [3, 4, 1, 5], 1);
         expect(result.currPosition).toBe(4);
         expect(result.skipSize).toBe(4);
     });
 
-    // test('Handles empty array', () => {
-    //     expect(knotHashPart2([])).toBe('a2582a3a0e66e6e86e3812dcb672a272');
-    // });
-    // test('Handles any string value', () => {
-    //     expect(knotHashPart2('AoC 2017')).toBe('33efeb34ea91902bb2f59c9920caa6cd');
-    // });
-    // test('Handles empty array', () => {
-    //     expect(knotHashPart2([])).toBe('a2582a3a0e66e6e86e3812dcb672a272');
-    // });
-    // test('Puzzle input1', () => {
-    //     expect(knotHashPart2([1, 2, 3])).toBe('3efbe78a8d82f29979031a4aa0b16a9d');
-    // });
-    // test('Puzzle input', () => {
-    //     expect(knotHashPart2(PUZZLE_INPUT)).toBe(10);
-    // });
+    test('Handles empty array', () => {
+        expect(knotHashPart2([])).toBe('a2582a3a0e66e6e86e3812dcb672a272');
+    });
+
+    test('Handles any string value', () => {
+        expect(knotHashPart2('AoC 2017')).toBe('33efeb34ea91902bb2f59c9920caa6cd');
+    });
+
+    test('Handles empty array', () => {
+        expect(knotHashPart2([])).toBe('a2582a3a0e66e6e86e3812dcb672a272');
+    });
+
+    test('[1, 2, 3]', () => {
+        expect(knotHashPart2([1, 2, 3])).toBe('3efbe78a8d82f29979031a4aa0b16a9d');
+    });
+
+    test('Puzzle input', () => {
+        expect(knotHashPart2(PUZZLE_INPUT)).toBe('e1462100a34221a7f0906da15c1c979a');
+    });
 });
