@@ -32,7 +32,7 @@ const countReallocationCycles = R.curry((numLoops, banks) => {
         cycles++;
     }
 
-    return numLoops ? countReallocationCycles(numLoops - 1, banks) : cycles;
+    return numLoops > 1 ? countReallocationCycles(numLoops - 1, banks) : cycles;
 });
 
 /**

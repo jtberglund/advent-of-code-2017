@@ -1,4 +1,4 @@
-import { parseProgram, recursiveCircusPart1 } from './RecursiveCircus';
+import { parseProgram, recursiveCircusPart1, recursiveCircusPart2 } from './RecursiveCircus';
 
 import { readFileLineByLine } from '../utils';
 
@@ -49,4 +49,12 @@ describe('Recursive Circus Part 1', () => {
     });
 });
 
-describe('Recursive Circus Part 2', () => {});
+describe('Recursive Circus Part 2', () => {
+    test('Example', () => {
+        expect(recursiveCircusPart2(EXAMPLE)).toBe('tknk');
+    });
+
+    test.only('Puzzle input', () => {
+        return PUZZLE_INPUT.then(list => expect(recursiveCircusPart2(list)).toEqual(1993));
+    });
+});
