@@ -38,4 +38,6 @@ const pad = R.curry((char, len, str) => {
     return char.repeat(padAmount) + str;
 });
 
-export { readFile, readFileLineByLine, trace, reduce, pad };
+const strToInt = num => parseInt(num, 10);
+
+export { readFile, readFileLineByLine, trace, reduce, pad, strToInt };
