@@ -1,4 +1,5 @@
-import { digitalPlumberPart1 } from './DigitalPlumber';
+import { digitalPlumberPart1, digitalPlumberPart2 } from './DigitalPlumber';
+
 import { readFileLineByLine } from '../utils/index';
 
 const EXAMPLE = ['0 <-> 2', '1 <-> 1', '2 <-> 0, 3, 4', '3 <-> 2, 4', '4 <-> 2, 3, 6', '5 <-> 6', '6 <-> 4, 5'];
@@ -12,5 +13,11 @@ describe('Digital Plumber Part 1', () => {
 
     test('Puzzle input', () => {
         return PUZZLE_INPUT.then(input => expect(digitalPlumberPart1(input)).toEqual(145));
+    });
+});
+
+describe('Digital Plumber Part 2', () => {
+    test('Puzzle input', () => {
+        return PUZZLE_INPUT.then(input => expect(digitalPlumberPart2(input)).toEqual(207));
     });
 });

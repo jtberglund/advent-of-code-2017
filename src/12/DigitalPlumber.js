@@ -7,6 +7,7 @@ const concat = (a, b) => {
     return [...set];
 };
 
+// TODO ugly and slow...
 const parseProgram = (map, program) => {
     const words = R.compose(R.split(' '), R.replace(/,/g, ''))(program);
     const self = strToInt(words[0]);
@@ -38,4 +39,11 @@ const digitalPlumberPart1 = programList => {
     return getProgramsThatContain(programs, 0).length;
 };
 
-export { digitalPlumberPart1 };
+// TODO this is pretty janky... but it works
+const digitalPlumberPart2 = programList => {
+    const programs = programList.reduce(parseProgram, {});
+    const groups = new Set(Object.keys(programs).map(key => programs[key].sort().toString()));
+    return groups.size;
+};
+
+export { digitalPlumberPart1, digitalPlumberPart2 };
