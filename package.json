@@ -21,7 +21,12 @@
         "ramda": "^0.25.0"
     },
     "babel": {
-        "presets": ["env"],
-        "plugins": ["transform-object-rest-spread", "transform-class-properties"]
+        "presets": [
+            "env"
+        ],
+        "plugins": [
+            "transform-object-rest-spread",
+            "transform-class-properties"
+        ]
     }
 }
