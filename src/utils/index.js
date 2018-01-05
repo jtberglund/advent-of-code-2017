@@ -40,4 +40,6 @@ const pad = R.curry((char, len, str) => {
 
 const strToInt = num => parseInt(num, 10);
 
-export { readFile, readFileLineByLine, trace, reduce, pad, strToInt };
+const add = R.reduce((sum, val) => sum + val, 0);
+
+export { readFile, readFileLineByLine, trace, reduce, pad, strToInt, add };
