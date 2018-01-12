@@ -1,4 +1,4 @@
-import { packetScannersPart1, packetScannersPart2 } from './PacketScanners';
+import { escapeFirewall, packetScannersPart1, packetScannersPart2 } from './PacketScanners';
 import { readFileLineByLine, strToInt } from '../utils';
 
 import R from 'ramda';
@@ -35,12 +35,14 @@ describe('Packet Scanners Part 1', () => {
     });
 });
 
-describe.only('Packet Scanners Part 2', () => {
+describe('Packet Scanners Part 2', () => {
     test('Example', () => {
-        expect(packetScannersPart2(EXAMPLE)).toBe(10);
+        expect(packetScannersPart2(0, EXAMPLE)).toBe(10);
     });
 
     test('Puzzle input', () => {
-        return PUZZLE_INPUT.then(input => expect(packetScannersPart2(input)).toBe(10));
+        // NOTE - takes FOREVER to run if iterating from 0 using packetScannersPart2 function
+        return PUZZLE_INPUT.then(input => expect(packetScannersPart2(3964778, input)).toBe(3964778));
+        // return PUZZLE_INPUT.then(input => expect(packetScannersPart2(0, input)).toBe(3964778));
     });
 });

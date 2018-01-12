@@ -3,6 +3,12 @@ import Result from 'folktale/result';
 import Validation from 'folktale/validation';
 import { add } from '../utils';
 
+const traceAdd = nums => {
+    const r = add(nums);
+    // console.log(r);
+    return r;
+};
+
 const Direction = Object.freeze({
     UP: Symbol('up'),
     DOWN: Symbol('down')
@@ -55,25 +61,21 @@ const computeSeverity = (layer, scanner) => layer * scanner.range;
 const movePacket = (layer, scanners) => {
     const scanner = scanners[layer];
     const failed = isAtTop(scanner);
-    // console.log('failed', failed);
     return isAtTop(scanner) ? Validation.Failure([computeSeverity(layer, scanner)]) : Validation.Success(0);
 };
 
 const mapFailure = R.curry((fn, val) => val.mapFailure(fn));
 
-const escapeFirewall = R.curry((delay, depths) => {
-    // console.log(delay);
+export const escapeFirewall = R.curry((delay, depths) => {
     const maxDepth = Math.max(...R.keys(depths));
     const layers = R.range(0, maxDepth + 1);
-    const scanners = layers.map(depth => {
-        const range = depths[depth] || 0;
-        return new Scanner(range);
-    });
+    const scanners = layers.map(depth => new Scanner(depths[depth] || 0));
 
+    // Delay the packet
     R.range(0, delay).forEach(() => moveScanners(scanners));
 
     return R.compose(
-        mapFailure(add),
+        mapFailure(traceAdd),
         R.reduce((totalSeverity, layer) => {
             const result = movePacket(layer, scanners);
             moveScanners(scanners);
@@ -82,42 +84,18 @@ const escapeFirewall = R.curry((delay, depths) => {
     )(layers);
 });
 
-export const packetScannersPart1 = R.compose(r => escapeFirewall(0));
+export const packetScannersPart1 = R.compose(R.prop('value'), escapeFirewall(0));
 
 const liftValidation = val => (Validation.hasInstance(val) ? val : Validation.of(val));
 
-const tryEscape = R.curry((temp, depths) => {
-    const valDelay = liftValidation(temp);
-    const r = escapeFirewall(valDelay.value, depths)
+const tryEscape = R.curry((delay, depths) => {
+    const valDelay = liftValidation(delay);
+    return escapeFirewall(valDelay.value, depths)
         .map(() => valDelay.value)
-        .mapFailure(delay => valDelay.value + 1);
-    // console.log('r', r);
-    // if (valDelay.value > 10000) {
-    //     return Validation.Success('FAIL');
-    // }
-    return r;
+        .mapFailure(() => valDelay.value + 1);
 });
 
-const isSuccess = a => {
-    // console.log(a);
-    return Validation.Success.hasInstance(a);
-};
-// export const packetScannersPart2 = depths => {
-//     let delay = 4;
-//     let severity = Infinity;
-//     let count = 7;
-//     while (tryEscape !== 0 && count !== 0) {
-//         escapeFirewall(delay, depths)
-//             .map(() => (severity = 0))
-//             .mapFailure(newDelay => {
-//                 // console.log(newDelay);
-//                 delay++;
-//             });
-//         count--;
-//     }
-//     return delay;
-// };
+const isSuccess = Validation.Success.hasInstance;
 
-export const packetScannersPart2 = depths => R.compose(R.prop('value'), R.until(isSuccess, tryEscape(R.__, depths)))(0);
-
-// export const packetScannersPart2 = depths => R.until(isSuccess, escapeFirewall(R.__, depths))(0);
+// TODO need to do some caching of the scanner's positions to make this performant
+export const packetScannersPart2 = (delay, depths) => R.compose(R.prop('value'), R.until(isSuccess, tryEscape(R.__, depths)))(delay);
