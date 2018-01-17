@@ -1,4 +1,4 @@
-import { diskDefragPart1, hashToBinary, hexToBinary } from './DiskDefragmentation';
+import { countRegions, diskDefragPart1, hashToBinary, hexToBinary } from './DiskDefragmentation';
 
 describe('Disk Defragmentation Part 1', () => {
     test('hexToBin', () => {
@@ -18,5 +18,22 @@ describe('Disk Defragmentation Part 1', () => {
 
     test('Puzzle input', () => {
         expect(diskDefragPart1('wenycdww')).toBe(8226);
+    });
+});
+
+describe.only('Disk Defragmentation Part 2', () => {
+    test('countSquares', () => {
+        const squares = [
+            ['1', '1', '0', '1', '0', '1', '0', '0'],
+            ['0', '1', '0', '1', '0', '1', '0', '1'],
+            ['0', '0', '0', '0', '1', '0', '1', '0'],
+            ['1', '0', '1', '0', '1', '1', '0', '1'],
+            ['0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0'],
+            ['0', '0', '0', '0', '0', '0', '0', '0']
+        ];
+
+        expect(countRegions(squares)).toBe(8);
     });
 });
