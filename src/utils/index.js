@@ -42,4 +42,6 @@ const strToInt = num => parseInt(num, 10);
 
 const add = R.reduce((sum, val) => sum + val, 0);
 
-export { readFile, readFileLineByLine, trace, reduce, pad, strToInt, add };
+const toBinary = val => val.toString(2);
+
+export { readFile, readFileLineByLine, trace, reduce, pad, strToInt, add, toBinary };

@@ -1,12 +1,11 @@
+import { add, toBinary } from '../utils';
+
 import R from 'ramda';
-import { add } from '../utils';
 import { knotHashPart2 } from '../10/KnotHash';
 
 const substr = R.curry((num, str) => str.substr(num));
 
 const toHex = num => parseInt(num, 16);
-
-const toBinary = val => val.toString(2);
 
 const prepend = R.curry((str1, str2) => str1 + str2);
 
