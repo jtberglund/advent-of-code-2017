@@ -13,7 +13,7 @@ describe('Dueling Generators Part 1', () => {
         expect(duelingGeneratorsPart1(startingValueA, startingValueB, 40000000)).toBe(588);
     });
 
-    test.only('Puzzle input', () => {
+    test('Puzzle input', () => {
         const startingValueA = 591;
         const startingValueB = 393;
         expect(duelingGeneratorsPart1(startingValueA, startingValueB, 40000000)).toBe(619);
