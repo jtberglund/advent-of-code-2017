@@ -65,3 +65,26 @@ export const permutationPromenadePart1_Safe = (instructions, programs) => {
 
 export const permutationPromenadePart1 = (instructions, programs) =>
     R.pipe(R.split(''), ...R.map(parseInstruction, instructions), R.join(''))(programs);
+
+export const permutationPromenadePart2 = (instructions, programs, numDances) => {
+    const instructionList = R.map(parseInstruction, instructions);
+    const orig = programs;
+
+    // Cache the program arrangements as we go so we can exit the loop as soon as a cycle is detected
+    const results = [programs.split('')];
+
+    let result;
+    for (let i = 0; i < numDances; i++) {
+        for (let j = 0; j < instructionList.length; j++) {
+            results[i] = instructionList[j](results[i]);
+        }
+        results.push(results[i]);
+
+        // Once we have detected a cycle, we can skip the rest of the iterations
+        if (results[i].join('') === orig) {
+            result = results[numDances % (i + 1) - 1];
+            break;
+        }
+    }
+    return result.join('');
+};

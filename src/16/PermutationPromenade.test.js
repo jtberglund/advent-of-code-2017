@@ -1,4 +1,11 @@
-import { exchange, partner, permutationPromenadePart1, permutationPromenadePart1_Safe, spin } from './PermutationPromenade';
+import {
+    exchange,
+    partner,
+    permutationPromenadePart1,
+    permutationPromenadePart1_Safe,
+    permutationPromenadePart2,
+    spin
+} from './PermutationPromenade';
 
 import { readFile } from '../utils';
 
@@ -39,11 +46,6 @@ describe('exchange', () => {
         expect(exchange(-1, 0, start)).toEqual(start);
         expect(exchange(10, 0, start)).toEqual(start);
     });
-
-    // test.only('Temp', () => {
-    //     const arr = 'abcdefghijklmnop'.split('');
-    //     expect(exchange(10, 0, arr).join('')).toEqual('kbcdefghijalmnop');
-    // });
 
     test('exchange(0, 0, [a,b,c,d,e]) produces abcde', () => {
         expect(exchange(0, 0, start)).toEqual(start);
@@ -86,6 +88,15 @@ describe('Permutation Promenade Part 1', () => {
         // Use the "safe" version, since the cleaner version might cause a stack overflow with too many instructions
         return PUZZLE_INPUT.then(instructions => instructions.split(',')).then(instructions => {
             return expect(permutationPromenadePart1_Safe(instructions, programs)).toEqual('kgdchlfniambejop');
+        });
+    });
+});
+
+describe('Permutation Promenade Part 2', () => {
+    test('Puzzle input', () => {
+        const programs = 'abcdefghijklmnop';
+        return PUZZLE_INPUT.then(instructions => instructions.split(',')).then(instructions => {
+            return expect(permutationPromenadePart2(instructions, programs, 1000000000)).toEqual('fjpmholcibdgeakn');
         });
     });
 });
