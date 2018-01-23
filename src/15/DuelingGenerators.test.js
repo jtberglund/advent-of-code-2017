@@ -13,7 +13,7 @@ describe('Dueling Generators Part 1', () => {
         expect(duelingGeneratorsPart1(startingValueA, startingValueB, 40000000)).toBe(588);
     });
 
-    test('Puzzle input', () => {
+    test.only('Puzzle input', () => {
         const startingValueA = 591;
         const startingValueB = 393;
         expect(duelingGeneratorsPart1(startingValueA, startingValueB, 40000000)).toBe(619);
@@ -27,9 +27,9 @@ describe('Dueling Generators Part 2', () => {
         expect(duelingGeneratorsPart1(startingValueA, startingValueB, 5000000)).toBe(309);
     });
 
-    test.only('Puzzle input', () => {
+    test('Puzzle input', () => {
         const startingValueA = 591;
         const startingValueB = 393;
-        expect(duelingGeneratorsPart2(startingValueA, startingValueB, 5000000)).toBe(619);
+        expect(duelingGeneratorsPart2(startingValueA, startingValueB, 5000000)).toBe(290);
     });
 });

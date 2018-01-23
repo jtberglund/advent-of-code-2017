@@ -2,9 +2,9 @@ import R from 'ramda';
 import { toBinary } from '../utils';
 
 function* generate(value, factor, multiple = 1) {
-    let val;
+    let val = value;
     while (true) {
-        val = (value * factor) % 2147483647;
+        val = (val * factor) % 2147483647;
         if (val % multiple === 0) {
             yield val;
         }
@@ -12,14 +12,15 @@ function* generate(value, factor, multiple = 1) {
 }
 
 const countMatches = (numPairs, startingValueA, startingValueB, multipleA, multipleB) => {
-    let valA = startingValueA;
-    let valB = startingValueB;
-    let count = 0;
+    const generatorA = generate(startingValueA, 16807, multipleA);
+    const generatorB = generate(startingValueB, 48271, multipleB);
+
+    // Used to grab last 16 bits of the value
     const mask = 0b00000000000000001111111111111111;
+
+    let count = 0;
     for (let i = 0; i < numPairs; i++) {
-        valA = generate(valA, 16807, multipleA).next().value;
-        valB = generate(valB, 48271, multipleB).next().value;
-        if ((valA & mask) === (valB & mask)) {
+        if ((generatorA.next().value & mask) === (generatorB.next().value & mask)) {
             count += 1;
         }
     }
