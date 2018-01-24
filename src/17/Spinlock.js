@@ -22,3 +22,16 @@ export const step = (numSteps, numIterations) =>
 const getNextBufferValue = ({ index, buffer }) => buffer[index + 1];
 
 export const spinlockPart1 = R.compose(getNextBufferValue, step);
+
+export const spinlockPart2 = (numSteps, numIterations) => {
+    let index = 0;
+    let result = 0;
+    for (let i = 1; i <= numIterations; i++) {
+        index = (index + numSteps) % i + 1;
+        if (index === 1) {
+            result = i;
+        }
+    }
+
+    return result;
+};

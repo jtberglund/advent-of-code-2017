@@ -1,4 +1,4 @@
-import { spinlockPart1, step } from './Spinlock';
+import { spinlockPart1, spinlockPart2, step } from './Spinlock';
 
 describe('Spinlock Part 1', () => {
     test('Step 1 time', () => {
@@ -35,5 +35,11 @@ describe('Spinlock Part 1', () => {
 
     test('Puzzle input', () => {
         expect(spinlockPart1(304, 2017)).toBe(1173);
+    });
+});
+
+describe('Spinlock Part 2', () => {
+    test('Puzzle input', () => {
+        expect(spinlockPart2(304, 50000000)).toBe(1930815);
     });
 });
