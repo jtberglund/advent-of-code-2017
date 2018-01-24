@@ -35,3 +35,7 @@ export const duetPart1 = instructions => {
 
     return lastSound;
 };
+
+export const duetPart2 = instructions => {
+    // TODO
+};

@@ -25,3 +25,9 @@ describe('Duet part 1', () => {
         return PUZZLE_INPUT.then(instructions => expect(duetPart1(instructions)).toBe(9423));
     });
 });
+
+describe('Duet part 2', () => {
+    test('', () => {
+        // TODO
+    });
+});
