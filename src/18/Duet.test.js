@@ -1,7 +1,10 @@
-import { duetPart1 } from './Duet';
+import { duetPart1, duetPart2 } from './Duet';
+
 import { readFileLineByLine } from '../utils';
 
 const PUZZLE_INPUT = readFileLineByLine(`${__dirname}/input.txt`);
+
+jest.setTimeout(30000);
 
 describe('Duet part 1', () => {
     test('Example', () => {
@@ -27,7 +30,22 @@ describe('Duet part 1', () => {
 });
 
 describe('Duet part 2', () => {
-    test('', () => {
-        // TODO
+    test('Example', () => {
+        // prettier-ignore
+        const instructions = [
+            'snd 1',
+            'snd 2',
+            'snd p',
+            'rcv a',
+            'rcv b',
+            'rcv c',
+            'rcv d',
+        ];
+        // return duetPart2(instructions).then(r => expect(r).toBe(3));
+        expect(duetPart2(instructions)).toBe(3);
+    });
+
+    test.only('Puzzle input', () => {
+        return PUZZLE_INPUT.then(instructions => duetPart2(instructions)).then(result => expect(result).toBe(54));
     });
 });

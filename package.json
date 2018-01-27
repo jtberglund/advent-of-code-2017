@@ -10,10 +10,14 @@
     "license": "MIT",
     "devDependencies": {
         "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.0",
+        "babel-jest": "^22.1.0",
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "babel-preset-env": "^1.6.1",
-        "jest": "^21.2.1"
+        "jest": "^21.2.1",
+        "regenerator-runtime": "^0.11.1"
     },
     "dependencies": {
         "folktale": "^2.0.1",
@@ -26,7 +30,8 @@
         ],
         "plugins": [
             "transform-object-rest-spread",
-            "transform-class-properties"
+            "transform-class-properties",
+            "babel-plugin-transform-async-to-generator"
         ]
     }
 }

@@ -1,8 +1,9 @@
 import R from 'ramda';
 import fs from 'fs';
 import readline from 'readline';
+import util from 'util';
 
-const readFile = file => {
+export const readFile = file => {
     return new Promise((resolve, reject) => {
         fs.readFile(file, 'utf8', (err, data) => {
             if (err) {
@@ -14,7 +15,7 @@ const readFile = file => {
     });
 };
 
-const readFileLineByLine = file => {
+export const readFileLineByLine = file => {
     return new Promise((resolve, reject) => {
         const lines = [];
         readline
@@ -26,22 +27,35 @@ const readFileLineByLine = file => {
     });
 };
 
-const trace = args => {
+export const trace = args => {
     console.log(args);
     return args;
 };
 
-const reduce = R.addIndex(R.reduce);
+export const traceToBuffer = R.curry((buffer, args) => {
+    buffer.log(util.inspect(args));
+    buffer.log('\n');
+    return args;
+});
 
-const pad = R.curry((char, len, str) => {
+export const reduce = R.addIndex(R.reduce);
+
+export const pad = R.curry((char, len, str) => {
     const padAmount = Math.max(len - str.length, 0);
     return char.repeat(padAmount) + str;
 });
 
-const strToInt = num => parseInt(num, 10);
+export const strToInt = num => parseInt(num, 10);
 
-const add = R.reduce((sum, val) => sum + val, 0);
+export const add = R.reduce((sum, val) => sum + val, 0);
 
-const toBinary = val => val.toString(2);
+export const toBinary = val => val.toString(2);
 
-export { readFile, readFileLineByLine, trace, reduce, pad, strToInt, add, toBinary };
+export const createDebugBuffer = () => {
+    let debugStr = '';
+    return {
+        log: str => (debugStr += str),
+        flush: () => console.log(debugStr),
+        get: () => debugStr
+    };
+};
