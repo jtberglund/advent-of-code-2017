@@ -29,23 +29,23 @@ describe('Duet part 1', () => {
     });
 });
 
-describe('Duet part 2', () => {
-    test('Example', () => {
-        // prettier-ignore
-        const instructions = [
-            'snd 1',
-            'snd 2',
-            'snd p',
-            'rcv a',
-            'rcv b',
-            'rcv c',
-            'rcv d',
-        ];
-        // return duetPart2(instructions).then(r => expect(r).toBe(3));
-        expect(duetPart2(instructions)).toBe(3);
-    });
+// describe('Duet part 2', () => {
+//     test('Example', () => {
+//         // prettier-ignore
+//         const instructions = [
+//             'snd 1',
+//             'snd 2',
+//             'snd p',
+//             'rcv a',
+//             'rcv b',
+//             'rcv c',
+//             'rcv d',
+//         ];
+//         // return duetPart2(instructions).then(r => expect(r).toBe(3));
+//         expect(duetPart2(instructions)).toBe(3);
+//     });
 
-    test.only('Puzzle input', () => {
-        return PUZZLE_INPUT.then(instructions => duetPart2(instructions)).then(result => expect(result).toBe(54));
-    });
-});
+//     test.only('Puzzle input', () => {
+//         return PUZZLE_INPUT.then(instructions => duetPart2(instructions)).then(result => expect(result).toBe(54));
+//     });
+// });

@@ -59,3 +59,5 @@ export const createDebugBuffer = () => {
         get: () => debugStr
     };
 };
+
+export const notEquals = R.curry((a, b) => R.not(R.equals(a, b)));

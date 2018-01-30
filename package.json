@@ -4,7 +4,8 @@
     "description": "My solutions for Advent of Code 2017",
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "testWatch": "jest --watch"
     },
     "author": "Jeremy Berglund",
     "license": "MIT",
@@ -25,13 +26,7 @@
         "ramda": "^0.25.0"
     },
     "babel": {
-        "presets": [
-            "env"
-        ],
-        "plugins": [
-            "transform-object-rest-spread",
-            "transform-class-properties",
-            "babel-plugin-transform-async-to-generator"
-        ]
+        "presets": ["env"],
+        "plugins": ["transform-object-rest-spread", "transform-class-properties", "babel-plugin-transform-async-to-generator"]
     }
 }
