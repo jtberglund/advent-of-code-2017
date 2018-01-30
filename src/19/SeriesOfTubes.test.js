@@ -131,7 +131,8 @@ describe('step', () => {
         location: [1, 1],
         direction: Directions.DOWN,
         path: '',
-        isFinished: false
+        isFinished: false,
+        numSteps: 0
     };
 
     test('Moves location when on a regular tube square (| or -)', () => {
@@ -147,7 +148,8 @@ describe('step', () => {
             location: [2, 1],
             direction: Directions.DOWN,
             path: '',
-            isFinished: false
+            isFinished: false,
+            numSteps: 1
         };
 
         expect(actual).toEqual(expected);
@@ -166,7 +168,8 @@ describe('step', () => {
             location: [2, 1],
             direction: Directions.DOWN,
             path: 'Q',
-            isFinished: false
+            isFinished: false,
+            numSteps: 1
         };
 
         expect(actual).toEqual(expected);
@@ -185,7 +188,8 @@ describe('step', () => {
             location: [2, 1],
             direction: Directions.RIGHT,
             path: '',
-            isFinished: false
+            isFinished: false,
+            numSteps: 1
         };
 
         expect(actual).toEqual(expected);
@@ -203,7 +207,8 @@ describe('step', () => {
             location: [2, 1],
             direction: Directions.DOWN,
             path: '',
-            isFinished: true
+            isFinished: true,
+            numSteps: 1
         };
 
         expect(actual).toEqual(expected);
@@ -227,5 +232,13 @@ describe('Series of Tubes Part 1', () => {
 describe('Series of Tubes Part 2', () => {
     test('Example', () => {
         expect(seriesOfTubesPart2(EXAMPLE)).toBe(38);
+    });
+
+    test('Puzzle input', () => {
+        return PUZZLE_INPUT.then(tubes => {
+            const actual = seriesOfTubesPart2(tubes);
+            const expected = 17264;
+            return expect(actual).toEqual(expected);
+        });
     });
 });

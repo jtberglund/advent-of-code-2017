@@ -63,31 +63,31 @@ export const step = (tubes, state) => {
     const path = isLetter(square) ? state.path + square : state.path;
     // console.log(path);
     const direction = isFork(square) ? findNextDirection(tubes, { ...state, location }).getOrElse() : state.direction;
-    // console.log(direction);
-    const isFinished = square === undefined;
     return {
         location,
         direction,
         path,
-        isFinished
+        isFinished: square === undefined || square === ' ',
+        numSteps: state.numSteps + 1
     };
 };
 
-export const seriesOfTubesPart1 = tubes => {
+const travelThroughTubes = tubes => {
     let packetState = {
         location: [0, findStartIndex(tubes)],
         direction: Directions.DOWN,
         path: '',
-        isFinished: false
+        isFinished: false,
+        numSteps: 0
     };
 
     while (!packetState.isFinished) {
         packetState = step(tubes, packetState);
     }
 
-    return packetState.path;
+    return packetState;
 };
 
-export const seriesOfTubesPart2 = tubes => {
-    return null;
-};
+export const seriesOfTubesPart1 = R.compose(R.prop('path'), travelThroughTubes);
+
+export const seriesOfTubesPart2 = R.compose(R.prop('numSteps'), travelThroughTubes);
