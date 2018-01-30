@@ -87,3 +87,7 @@ export const seriesOfTubesPart1 = tubes => {
 
     return packetState.path;
 };
+
+export const seriesOfTubesPart2 = tubes => {
+    return null;
+};

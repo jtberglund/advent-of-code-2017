@@ -1,4 +1,4 @@
-import { Directions, findNextDirection, findStartIndex, move, seriesOfTubesPart1, step } from './SeriesOfTubes';
+import { Directions, findNextDirection, findStartIndex, move, seriesOfTubesPart1, seriesOfTubesPart2, step } from './SeriesOfTubes';
 
 import Maybe from 'folktale/maybe';
 import R from 'ramda';
@@ -221,5 +221,11 @@ describe('Series of Tubes Part 1', () => {
             const expected = 'RUEDAHWKSM';
             return expect(actual).toEqual(expected);
         });
+    });
+});
+
+describe('Series of Tubes Part 2', () => {
+    test('Example', () => {
+        expect(seriesOfTubesPart2(EXAMPLE)).toBe(38);
     });
 });
