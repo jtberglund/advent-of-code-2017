@@ -61,3 +61,5 @@ export const createDebugBuffer = () => {
 };
 
 export const notEquals = R.curry((a, b) => R.not(R.equals(a, b)));
+
+export const getOrElse = maybe => maybe.getOrElse();
