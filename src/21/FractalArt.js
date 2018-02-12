@@ -73,17 +73,12 @@ export const divideIntoGridOf = (amount, grid) => {
 export const divideGrid = grid => {
     let newGrid;
     if (grid.length === 2 || grid.length === 3) {
-        return grid;
+        return [grid];
     }
 
     if (dividesByTwo(grid)) {
-        // console.log('divides by 2', grid.length);
         newGrid = divideIntoGridOf(2, grid);
-        // console.log(grid);
-        // console.log('=>');
-        // console.log(newGrid);
     } else if (dividesByThree(grid)) {
-        // console.log('divides by 3', grid.length);
         newGrid = divideIntoGridOf(3, grid);
     } else {
         throw new Error('Grid does not evenly divide into 2 or 3');
@@ -98,20 +93,21 @@ const joinGrids = grids => {
 
 let it = 0;
 
-const iterate = (rules, grid) => {
+const iterate = (rules, gridList) => {
     it++;
     // 1. Split
-    const grids = R.map(divideGrid, [grid]);
-    // const grids = divideGrid(grid);
+    const grids = R.unnest(R.map(divideGrid, gridList));
     // 2. apply to all grids.
     const appliedGrids = R.map(R.compose(getOrElse, apply(rules)), grids);
     // 3. join
-    const unnestedGrids = R.unnest(appliedGrids);
+    // const unnestedGrids = R.unnest(appliedGrids);
+    const unnestedGrids = appliedGrids;
 
     if (it > 0) {
         console.log('iteration', it);
-        console.log(grid);
+        console.log(gridList);
         console.log(grids);
+        console.log(grids[0]);
         console.log(appliedGrids);
         console.log(unnestedGrids);
     }
@@ -128,19 +124,6 @@ const parseRules = R.compose(R.reduce((acc, rule) => ({ ...acc, ...rule }), {}),
 
 export const fractalArtPart1 = (ruleList, numInterations = 1) => {
     const rules = parseRules(ruleList);
-    return R.range(0, numInterations).reduce(result => iterate(rules, result), BASE_GRID);
+    // TODO need to join grids back together at the end
+    return R.range(0, numInterations).reduce(result => iterate(rules, result), [BASE_GRID]);
 };
-
-// export const fractalArtPart1 = (ruleList, numIterations = 1) => {
-//     const rules = parseRules(ruleList);
-
-//     let result = BASE_GRID;
-//     // const applyWithRules = R.compose(getOrElse, apply(rules));
-//     // const result = R.range(0, numIterations).reduce(applyWithRules, BASE_GRID);
-//     for (let i = 0; i < numIterations; i++) {
-//         result = apply(rules, result).getOrElse();
-
-//     }
-
-//     return result;
-// };

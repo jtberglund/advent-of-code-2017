@@ -124,7 +124,7 @@ describe('Fractal Art Part 1', () => {
             ['#', '.', '.', '#']
         ];
 
-        expect(actual).toEqual(expected);
+        expect(actual).toEqual([expected]);
     });
 
     test.only('Example - 2 iterations', () => {
@@ -144,6 +144,7 @@ describe('Fractal Art Part 1', () => {
             ['#', '.', '.', '#', '.', '.'],
             ['.', '.', '.', '.', '.', '.']
         ];
+        console.log(actual);
 
         expect(actual).toEqual(expected);
     });
