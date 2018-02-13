@@ -1,4 +1,4 @@
-import { apply, divideGrid, divideIntoGridOf, fractalArtPart1 } from './FractalArt';
+import { apply, divideGrid, divideIntoGridOf, fractalArtPart1, joinGrids } from './FractalArt';
 
 import R from 'ramda';
 
@@ -107,6 +107,61 @@ describe('divideIntoGridOf', () => {
     });
 });
 
+describe('joinGrids', () => {
+    test('Handles base case (single grid)', () => {
+        const grids = [[['#', '.'], ['.', '#']]];
+
+        const actual = joinGrids(grids);
+        const expected = grids;
+
+        expect(actual).toEqual(expected);
+    });
+
+    test.only('Handles base case of 2 grids', () => {
+        // prettier-ignore
+        const grids = [
+            [['00', '01'], ['10', '11']],
+            [['02', '03'], ['12', '13']],
+        ];
+
+        const actual = joinGrids(grids);
+        // prettier-ignore
+        const expected = [
+            ['00', '01', '02', '03'],
+            ['10', '11', '12', '13'],
+        ];
+
+        expect(actual).toEqual(expected);
+    });
+
+    test('Throws for non-power-of-2-sized grids');
+
+    test('Joins four grids', () => {
+        // prettier-ignore
+        const grids = [
+            // grid1 (top-left)
+            [['#', '#'], ['#', '#']],
+            // grid2 (top-right)
+            [['#', '.'], ['.', '.']],
+            // grid3 (bottom-left)
+            [['.', '#'], ['.', '#']],
+            // grid4 (bottom-right)
+            [['.', '.'], ['.', '.']],
+        ];
+
+        const actual = joinGrids(grids);
+        // prettier-ignore
+        const expected = [
+            ['#', '#', '#', '.'],
+            ['#', '#', '.', '.'],
+            ['.', '#', '.', '.'],
+            ['.', '#', '.', '.'],
+        ];
+
+        expect(actual).toEqual(expected);
+    });
+});
+
 describe('Fractal Art Part 1', () => {
     test('Example - 1 iteration', () => {
         // prettier-ignore
@@ -127,7 +182,7 @@ describe('Fractal Art Part 1', () => {
         expect(actual).toEqual([expected]);
     });
 
-    test.only('Example - 2 iterations', () => {
+    test('Example - 2 iterations', () => {
         // prettier-ignore
         const rules = [
             '../.# => ##./#../...',

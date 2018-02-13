@@ -87,10 +87,6 @@ export const divideGrid = grid => {
     return newGrid;
 };
 
-const joinGrids = grids => {
-    // TODO
-};
-
 let it = 0;
 
 const iterate = (rules, gridList) => {
@@ -103,14 +99,14 @@ const iterate = (rules, gridList) => {
     // const unnestedGrids = R.unnest(appliedGrids);
     const unnestedGrids = appliedGrids;
 
-    if (it > 0) {
-        console.log('iteration', it);
-        console.log(gridList);
-        console.log(grids);
-        console.log(grids[0]);
-        console.log(appliedGrids);
-        console.log(unnestedGrids);
-    }
+    // if (it > 0) {
+    //     console.log('iteration', it);
+    //     console.log(gridList);
+    //     console.log(grids);
+    //     console.log(grids[0]);
+    //     console.log(appliedGrids);
+    //     console.log(unnestedGrids);
+    // }
 
     return unnestedGrids;
 };
@@ -122,8 +118,35 @@ const parseRule = rule => {
 
 const parseRules = R.compose(R.reduce((acc, rule) => ({ ...acc, ...rule }), {}), R.map(parseRule));
 
+export const joinGrids = grids => {
+    // Base case - 2 or 3 grids, joined into 2 or 3 rows of 4 or 6 characters
+    if (grids.length < 4) {
+        return grids.reduce((acc, grid, i) => {
+            return acc.concat(grids.map(grid => grid[i]));
+        }, []);
+    }
+
+    // If at least 4 grids, make sure we can actually join these grids
+    const numGridRows = Math.sqrt(grids.length);
+    if (!Number.isInteger(numGridRows)) {
+        throw new Error('Cannot join grids - number of grids must be a power of 2');
+    }
+
+    // Recursively join the grids together
+    const result = R.range(0, numGridRows).map(gridRow => {
+        const start = numGridRows * gridRow;
+        const end = start + numGridRows;
+        console.log('start', start, 'end', end);
+
+        const gridsNeededForThisRow = grids.slice(start, end);
+        return joinGrids(gridsNeededForThisRow);
+    });
+    console.log(result);
+    return result;
+};
+
 export const fractalArtPart1 = (ruleList, numInterations = 1) => {
     const rules = parseRules(ruleList);
     // TODO need to join grids back together at the end
-    return R.range(0, numInterations).reduce(result => iterate(rules, result), [BASE_GRID]);
+    return joinGrids(R.range(0, numInterations).reduce(result => iterate(rules, result), [BASE_GRID]));
 };
