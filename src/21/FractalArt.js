@@ -5,8 +5,8 @@ import { getOrElse } from '../utils';
 const ON = '#';
 const OFF = '.';
 
-const flip = R.map(R.reverse);
-const rotateClockwise = R.compose(R.transpose, flip);
+const flip = R.compose(R.join('/'), R.map(R.reverse), R.split('/'));
+const rotateClockwise = R.compose(R.transpose, R.map(R.reverse));
 const rotateCounterClockwise = R.transpose;
 
 // prettier-ignore
@@ -22,14 +22,20 @@ const gridToStr = R.compose(R.join('/'), R.map(R.join('')));
 const strToGrid = R.compose(R.map(R.split('')), R.split('/'));
 
 const getMatch = (rules, grid) => {
-    return rules[gridToStr(grid)] || rules[flip(gridToStr(grid))];
+    const str = gridToStr(grid);
+    // console.log('Attempting to get match for', str, 'and', flip(str));
+    const rule = rules[str] || rules[flip(str)];
+    // console.log('matched with', rule);
+    return rule;
 };
 
 // Find a matching rule for a grid and transform the grid
 export const apply = R.curry((rules, grid) => {
     let newGrid;
     for (let i = 0; i < 4; i++) {
+        // console.log(grid);
         newGrid = getMatch(rules, grid);
+        // console.log(newGrid);
         if (newGrid) {
             return Maybe.of(strToGrid(newGrid));
         }
@@ -37,6 +43,7 @@ export const apply = R.curry((rules, grid) => {
         // Rotate the grid clockwise each time to try a different permutation
         grid = rotateClockwise(grid);
     }
+    console.log('Could not find match for', grid);
     return Maybe.empty();
 });
 
@@ -116,13 +123,29 @@ const parseRule = rule => {
     return { [key]: value };
 };
 
-const parseRules = R.compose(R.reduce((acc, rule) => ({ ...acc, ...rule }), {}), R.map(parseRule));
+export const parseRules = R.compose(R.reduce((acc, rule) => ({ ...acc, ...rule }), {}), R.map(parseRule));
+
+const joinGridRow = grids => (acc, grid, i) => {
+    return acc.concat([
+        grids.reduce((row, grid) => {
+            // console.log(grid);
+            // console.log(i);
+            return row.concat(grid[i]);
+        }, [])
+    ]);
+};
 
 export const joinGrids = grids => {
     // Base case - 2 or 3 grids, joined into 2 or 3 rows of 4 or 6 characters
-    if (grids.length < 4) {
-        return grids.reduce((acc, grid, i) => {
-            return acc.concat(grids.map(grid => grid[i]));
+    if (grids.length < 4 && grids[0]) {
+        const numRows = grids[0].length;
+        return R.range(0, numRows).reduce((rows, rowIndex) => {
+            return rows.concat([
+                // Accumulate the values from this row in all the grids
+                grids.reduce((row, grid) => {
+                    return row.concat(grid[rowIndex]);
+                }, [])
+            ]);
         }, []);
     }
 
@@ -136,17 +159,29 @@ export const joinGrids = grids => {
     const result = R.range(0, numGridRows).map(gridRow => {
         const start = numGridRows * gridRow;
         const end = start + numGridRows;
-        console.log('start', start, 'end', end);
+        // console.log('start', start, 'end', end);
 
         const gridsNeededForThisRow = grids.slice(start, end);
+        // console.log(gridsNeededForThisRow);
+        // console.log(joinGrids(gridsNeededForThisRow));
         return joinGrids(gridsNeededForThisRow);
     });
-    console.log(result);
-    return result;
+    // console.log(result);
+    return R.unnest(result);
 };
 
-export const fractalArtPart1 = (ruleList, numInterations = 1) => {
+/**
+ * Applied the specified rules to the BASE_GRID
+ * for the specified number of iterations
+ */
+export const generateArt = (rules, numIterations = 1) =>
+    R.compose(joinGrids, R.reduce(prevGrid => iterate(rules, prevGrid), [BASE_GRID]))(R.range(0, numIterations));
+
+const countOnPixels = row => row.filter(R.equals(ON)).length;
+
+export const fractalArtPart1 = (ruleList, numIterations) => {
     const rules = parseRules(ruleList);
-    // TODO need to join grids back together at the end
-    return joinGrids(R.range(0, numInterations).reduce(result => iterate(rules, result), [BASE_GRID]));
+    const grid = generateArt(rules, numIterations);
+    console.log(grid);
+    return grid.map(countOnPixels).reduce(R.add);
 };

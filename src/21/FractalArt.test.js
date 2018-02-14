@@ -1,6 +1,9 @@
-import { apply, divideGrid, divideIntoGridOf, fractalArtPart1, joinGrids } from './FractalArt';
+import { apply, divideGrid, divideIntoGridOf, fractalArtPart1, generateArt, joinGrids, parseRules } from './FractalArt';
 
 import R from 'ramda';
+import { readFileLineByLine } from '../utils';
+
+const PUZZLE_INPUT = readFileLineByLine(`${__dirname}/input.txt`);
 
 // prettier-ignore
 describe('apply rules', () => {
@@ -112,12 +115,12 @@ describe('joinGrids', () => {
         const grids = [[['#', '.'], ['.', '#']]];
 
         const actual = joinGrids(grids);
-        const expected = grids;
+        const expected = [['#', '.'], ['.', '#']];
 
         expect(actual).toEqual(expected);
     });
 
-    test.only('Handles base case of 2 grids', () => {
+    test('Handles base case of 2 grids', () => {
         // prettier-ignore
         const grids = [
             [['00', '01'], ['10', '11']],
@@ -128,13 +131,42 @@ describe('joinGrids', () => {
         // prettier-ignore
         const expected = [
             ['00', '01', '02', '03'],
-            ['10', '11', '12', '13'],
+            ['10', '11', '12', '13']
         ];
 
         expect(actual).toEqual(expected);
     });
 
-    test('Throws for non-power-of-2-sized grids');
+    test('Handles base case of 3 grids', () => {
+        // prettier-ignore
+        const grids = [
+            [['00', '01', '02'], ['10', '11', '12'], ['20', '21', '22']],
+            [['03', '04', '05'], ['13', '14', '15'], ['23', '24', '25']],
+        ];
+
+        const actual = joinGrids(grids);
+        // prettier-ignore
+        const expected = [
+            ['00', '01', '02', '03', '04', '05'],
+            ['10', '11', '12', '13', '14', '15'],
+            ['20', '21', '22', '23', '24', '25']
+        ];
+
+        expect(actual).toEqual(expected);
+    });
+
+    test('Throws for non-power-of-2-sized grids', () => {
+        // prettier-ignore
+        const grids = [
+            [['#', '#'], ['#', '#']],
+            [['#', '.'], ['.', '.']],
+            [['.', '#'], ['.', '#']],
+            [['.', '#'], ['.', '#']],
+            [['.', '#'], ['.', '#']],
+        ];
+
+        return expect(() => joinGrids(grids)).toThrow();
+    });
 
     test('Joins four grids', () => {
         // prettier-ignore
@@ -163,14 +195,14 @@ describe('joinGrids', () => {
 });
 
 describe('Fractal Art Part 1', () => {
-    test('Example - 1 iteration', () => {
+    test('Test art for example - 1 iteration', () => {
         // prettier-ignore
-        const rules = [
+        const rules = parseRules([
             '../.# => ##./#../...',
             '.#./..#/### => #..#/..../..../#..#'
-        ];
+        ]);
 
-        const actual = fractalArtPart1(rules, 1);
+        const actual = generateArt(rules, 1);
         // prettier-ignore
         const expected = [
             ['#', '.', '.', '#'],
@@ -179,17 +211,17 @@ describe('Fractal Art Part 1', () => {
             ['#', '.', '.', '#']
         ];
 
-        expect(actual).toEqual([expected]);
+        expect(actual).toEqual(expected);
     });
 
-    test('Example - 2 iterations', () => {
+    test('Test art for example - 2 iterations', () => {
         // prettier-ignore
-        const rules = [
+        const rules = parseRules([
             '../.# => ##./#../...',
             '.#./..#/### => #..#/..../..../#..#'
-        ];
+        ]);
 
-        const actual = fractalArtPart1(rules, 2);
+        const actual = generateArt(rules, 2);
         // prettier-ignore
         const expected = [
             ['#', '#', '.', '#', '#', '.'],
@@ -199,8 +231,42 @@ describe('Fractal Art Part 1', () => {
             ['#', '.', '.', '#', '.', '.'],
             ['.', '.', '.', '.', '.', '.']
         ];
-        console.log(actual);
 
         expect(actual).toEqual(expected);
+    });
+
+    test('Num on pixels for example - 1 iteration', () => {
+        // prettier-ignore
+        const rules = [
+            '../.# => ##./#../...',
+            '.#./..#/### => #..#/..../..../#..#'
+        ];
+
+        const actual = fractalArtPart1(rules, 1);
+        const expected = 4;
+
+        expect(actual).toEqual(expected);
+    });
+
+    test('Num on pixels for example - 2 iteration', () => {
+        // prettier-ignore
+        const rules = [
+            '../.# => ##./#../...',
+            '.#./..#/### => #..#/..../..../#..#'
+        ];
+
+        const actual = fractalArtPart1(rules, 2);
+        const expected = 12;
+
+        expect(actual).toEqual(expected);
+    });
+
+    test('Puzzle input', () => {
+        return PUZZLE_INPUT.then(rules => {
+            const actual = fractalArtPart1(rules, 5);
+            const expected = 84;
+
+            expect(actual).toBe(expected);
+        });
     });
 });
