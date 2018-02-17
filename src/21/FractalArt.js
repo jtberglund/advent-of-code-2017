@@ -2,18 +2,15 @@ import Maybe from 'folktale/maybe';
 import R from 'ramda';
 import { getOrElse } from '../utils';
 
-const ON = '#';
-const OFF = '.';
-
 const flip = R.compose(R.join('/'), R.map(R.reverse), R.split('/'));
 const rotateClockwise = R.compose(R.transpose, R.map(R.reverse));
 const rotateCounterClockwise = R.transpose;
 
 // prettier-ignore
 const BASE_GRID = [
-    [OFF, ON, OFF],
-    [OFF, OFF, ON],
-    [ON, ON, ON]
+    ['.', '#', '.'],
+    ['.', '.', '#'],
+    ['#', '#', '#']
 ];
 
 // [['.', '#'], ['#', '.']] -> '.#/#.'
@@ -23,10 +20,7 @@ const strToGrid = R.compose(R.map(R.split('')), R.split('/'));
 
 const getMatch = (rules, grid) => {
     const str = gridToStr(grid);
-    // console.log('Attempting to get match for', str, 'and', flip(str));
-    const rule = rules[str] || rules[flip(str)];
-    // console.log('matched with', rule);
-    return rule;
+    return rules[str] || rules[flip(str)];
 };
 
 // Find a matching rule for a grid and transform the grid
@@ -94,28 +88,11 @@ export const divideGrid = grid => {
     return newGrid;
 };
 
-let it = 0;
-
 const iterate = (rules, gridList) => {
-    it++;
-    // 1. Split
+    // Split grids into 2x2 or 3x3
     const grids = R.unnest(R.map(divideGrid, gridList));
-    // 2. apply to all grids.
-    const appliedGrids = R.map(R.compose(getOrElse, apply(rules)), grids);
-    // 3. join
-    // const unnestedGrids = R.unnest(appliedGrids);
-    const unnestedGrids = appliedGrids;
-
-    // if (it > 0) {
-    //     console.log('iteration', it);
-    //     console.log(gridList);
-    //     console.log(grids);
-    //     console.log(grids[0]);
-    //     console.log(appliedGrids);
-    //     console.log(unnestedGrids);
-    // }
-
-    return unnestedGrids;
+    // Match grids with the rules
+    return R.map(R.compose(getOrElse, apply(rules)), grids);
 };
 
 const parseRule = rule => {
@@ -125,16 +102,6 @@ const parseRule = rule => {
 
 export const parseRules = R.compose(R.reduce((acc, rule) => ({ ...acc, ...rule }), {}), R.map(parseRule));
 
-const joinGridRow = grids => (acc, grid, i) => {
-    return acc.concat([
-        grids.reduce((row, grid) => {
-            // console.log(grid);
-            // console.log(i);
-            return row.concat(grid[i]);
-        }, [])
-    ]);
-};
-
 export const joinGrids = grids => {
     // Base case - 2 or 3 grids, joined into 2 or 3 rows of 4 or 6 characters
     if (grids.length < 4 && grids[0]) {
@@ -142,9 +109,7 @@ export const joinGrids = grids => {
         return R.range(0, numRows).reduce((rows, rowIndex) => {
             return rows.concat([
                 // Accumulate the values from this row in all the grids
-                grids.reduce((row, grid) => {
-                    return row.concat(grid[rowIndex]);
-                }, [])
+                grids.reduce((row, grid) => row.concat(grid[rowIndex]), [])
             ]);
         }, []);
     }
@@ -159,14 +124,10 @@ export const joinGrids = grids => {
     const result = R.range(0, numGridRows).map(gridRow => {
         const start = numGridRows * gridRow;
         const end = start + numGridRows;
-        // console.log('start', start, 'end', end);
 
         const gridsNeededForThisRow = grids.slice(start, end);
-        // console.log(gridsNeededForThisRow);
-        // console.log(joinGrids(gridsNeededForThisRow));
         return joinGrids(gridsNeededForThisRow);
     });
-    // console.log(result);
     return R.unnest(result);
 };
 
@@ -177,11 +138,10 @@ export const joinGrids = grids => {
 export const generateArt = (rules, numIterations = 1) =>
     R.compose(joinGrids, R.reduce(prevGrid => iterate(rules, prevGrid), [BASE_GRID]))(R.range(0, numIterations));
 
-const countOnPixels = row => row.filter(R.equals(ON)).length;
+const countOnPixels = row => row.filter(R.equals('#')).length;
 
 export const fractalArtPart1 = (ruleList, numIterations) => {
     const rules = parseRules(ruleList);
     const grid = generateArt(rules, numIterations);
-    console.log(grid);
     return grid.map(countOnPixels).reduce(R.add);
 };
